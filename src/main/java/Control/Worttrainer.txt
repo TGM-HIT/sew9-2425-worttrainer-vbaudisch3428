@@ -1,0 +1,8 @@
+Hund,https://upload.wikimedia.org/wikipedia/commons/thumb/4/42/Harzer_Fuchs_H%C3%BCndin_2.jpg/640px-Harzer_Fuchs_H%C3%BCndin_2.jpg
+Katze,https://www.tierschutzbund.de/fileadmin/_processed_/d/1/csm_Katzen_auf_Seite_liegend_getigert_c_dtschb-sabine-muench.de_2e70d12553.jpg
+Flugzeug,https://ungarnheute.hu/wp-content/uploads/2024/02/pexels-tibor-szabo-16926515-2048x1365-1.jpg
+Kirsche,https://proto.gr/sites/www.proto.gr/files/styles/colorbox/public/images/fruits/cherries.jpg?itok=mDWbqXnf
+Lehrer,https://img.freepik.com/vektoren-premium/alter-lehrer-mit-buch-und-tafel-vektorillustration-im-cartoon-stil_979520-87275.jpg
+Brille,https://gv-flexvault.imgix.net/8719154681615-angle-brillenfassung-dbyd-dbof5035-brown-brown.png
+Löwe,https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg
+
