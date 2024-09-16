@@ -20,9 +20,13 @@ public class WortEintrag {
         if (wort == null || url == null) {
             throw new IllegalArgumentException("Wort und URL dürfen nicht null sein.");
         }
+        if (!url.matches("https?://.*")) {
+            throw new IllegalArgumentException("Ungültige URL.");
+        }
         this.wort = wort;
         this.url = url;
     }
+
 
     /**
      * Überprüft, ob die angegebene URL gültig ist.
