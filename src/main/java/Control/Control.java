@@ -11,17 +11,35 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+/**
+ * Die Klasse Control fungiert als Controller in einem MVC-Architekturmodell und verarbeitet die Benutzeraktionen,
+ * die von der Benutzeroberfläche (Panel) initiiert werden.
+ * Sie steuert die Logik des WortTrainer, einschließlich der Überprüfung von Benutzereingaben,
+ * der Verwaltung der richtigen und gesamt durchgeführten Versuche sowie dem Hinzufügen neuer Wörter.
+ * Zusätzlich ermöglicht die Klasse das Speichern und Laden der Daten des WortTrainers
+ * in eine externe Datei über die Persistenzschicht.
+ *
+ * @see Model.WortTrainer
+ * @see View.Panel
+ * @see Persistence.WortTrainerPersistence
+ */
+
+
 public class Control implements ActionListener {
     private WortTrainer wortTrainer;
     private Panel panel;
     private static final String FILE_PATH = "/Users/vbaudisch/Library/CloudStorage/GoogleDrive-vincent.baudisch@gmail.com/Meine Ablage/SEW/5BHIT/Worttrainer/src/main/java/Control/Worttrainer.txt";
 
+    /**
+     * Konstruktor für die Klasse Control.
+     * Initialisiert den WortTrainer und das Panel und zeigt das Fenster an.
+     */
     public Control() {
         try {
             WortListe wortListe = new WortListe();
             // Initialisiere WortListe mit Daten aus der Datei
             wortTrainer = new WortTrainer(wortListe);
-            // Lade initialen WortTrainer
+            // Lade initialen WortTrainer aus einer Datei
             wortTrainer = WortTrainerPersistence.laden(FILE_PATH);
             // Erzeuge das Panel und zeige es an
             panel = new Panel(wortTrainer.getZufälligenEintrag().getUrl(), this, wortTrainer.getRichtigeVersuche(), wortTrainer.getGesamtVersuche());
@@ -37,22 +55,36 @@ public class Control implements ActionListener {
         }
     }
 
+    /**
+     * Verarbeitet die Aktionen der Benutzeroberfläche.
+     * @param e ActionEvent, das die Benutzeraktion beschreibt.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if ("Enter".equals(command)) {
-            handleGuess();
-        } else if ("Zurücksetzen!".equals(command)) {
-            handleReset();
-        } else if ("Wort Hinzufügen!".equals(command)) {
-            handleAddWord();
-        } else if ("Laden".equals(command)) {
-            handleLoad();
-        } else if ("Speichern".equals(command)) {
-            handleSave();
+        switch (command) {
+            case "Enter":
+                handleGuess();
+                break;
+            case "Zurücksetzen!":
+                handleReset();
+                break;
+            case "Wort Hinzufügen!":
+                handleAddWord();
+                break;
+            case "Laden":
+                handleLoad();
+                break;
+            case "Speichern":
+                handleSave();
+                break;
         }
     }
 
+    /**
+     * Verarbeitet den Rateversuch des Benutzers.
+     * Prüft, ob das eingegebene Wort korrekt ist, und aktualisiert das Panel.
+     */
     private void handleGuess() {
         String eingabe = panel.getText();
         if (wortTrainer.checkIgnoreCase(eingabe)) {
@@ -67,12 +99,18 @@ public class Control implements ActionListener {
         }
     }
 
+    /**
+     * Setzt die Statistiken (richtige und Gesamtversuche) des WortTrainers zurück.
+     */
     private void handleReset() {
         wortTrainer.setRichtigeVersuche(0);
         wortTrainer.setGesamtVersuche(0);
         panel.updateRichtigeWoerter(wortTrainer.getRichtigeVersuche(), wortTrainer.getGesamtVersuche());
     }
 
+    /**
+     * Fügt ein neues Wort mit zugehöriger Bild-URL zur WortListe des WortTrainers hinzu.
+     */
     private void handleAddWord() {
         String wort = JOptionPane.showInputDialog("Geben Sie das Wort ein:");
         String url = JOptionPane.showInputDialog("Geben Sie die Bild-URL ein:");
@@ -84,6 +122,9 @@ public class Control implements ActionListener {
         }
     }
 
+    /**
+     * Lädt den gespeicherten Zustand des WortTrainers aus einer Datei.
+     */
     private void handleLoad() {
         try {
             wortTrainer = WortTrainerPersistence.laden(FILE_PATH);
@@ -93,6 +134,9 @@ public class Control implements ActionListener {
         }
     }
 
+    /**
+     * Speichert den aktuellen Zustand des WortTrainers in eine Datei.
+     */
     private void handleSave() {
         try {
             WortTrainerPersistence.speichern(wortTrainer, FILE_PATH);

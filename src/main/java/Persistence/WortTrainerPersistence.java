@@ -6,9 +6,19 @@ import Model.WortEintrag;
 
 import java.io.*;
 
+/**
+ * Die Klasse WortTrainerPersistence stellt Methoden zum Speichern und Laden eines {@link WortTrainer} in bzw. aus einer Datei bereit.
+ */
 public class WortTrainerPersistence {
 
-    // Methode zum Speichern des WortTrainer in einer Textdatei
+    /**
+     * Speichert den {@link WortTrainer} in einer Textdatei.
+     * Die Methode speichert sowohl die Wort-Einträge als auch die Statistik (richtige und gesamt Versuche).
+     *
+     * @param wortTrainer Der zu speichernde WortTrainer.
+     * @param fileName    Der Pfad zur Datei, in die gespeichert werden soll.
+     * @throws IOException Wenn ein Fehler beim Schreiben in die Datei auftritt.
+     */
     public static void speichern(WortTrainer wortTrainer, String fileName) throws IOException {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName))) {
             // Speichern der Wort-Einträge
@@ -24,7 +34,14 @@ public class WortTrainerPersistence {
         }
     }
 
-    // Methode zum Laden des WortTrainer aus einer Textdatei
+    /**
+     * Lädt einen {@link WortTrainer} aus einer Textdatei.
+     * Die Methode liest die Wort-Einträge und die Statistik (richtige und gesamt Versuche) aus der Datei und stellt sie im WortTrainer wieder her.
+     *
+     * @param fileName Der Pfad zur Datei, aus der der WortTrainer geladen werden soll.
+     * @return Der geladene WortTrainer mit allen Einträgen und der gespeicherten Statistik.
+     * @throws IOException Wenn ein Fehler beim Lesen aus der Datei auftritt.
+     */
     public static WortTrainer laden(String fileName) throws IOException {
         WortListe wortListe = new WortListe();
         int richtigeVersuche = 0;
