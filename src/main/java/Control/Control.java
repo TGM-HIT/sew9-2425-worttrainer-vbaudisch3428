@@ -25,8 +25,8 @@ import java.net.MalformedURLException;
  */
 
 public class Control implements ActionListener {
-    private WortTrainer wortTrainer;  // privat
-    private Panel panel;              // privat
+    private WortTrainer wortTrainer;
+    private Panel panel;
     private static final String FILE_PATH = "/Users/vbaudisch/Library/CloudStorage/GoogleDrive-vincent.baudisch@gmail.com/Meine Ablage/SEW/5BHIT/Worttrainer/src/main/java/Control/Worttrainer.txt";
 
     public static String getFilePath() {
