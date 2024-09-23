@@ -26,9 +26,9 @@ import java.net.MalformedURLException;
 
 
 public class Control implements ActionListener {
-    private WortTrainer wortTrainer;
-    private Panel panel;
-    private static final String FILE_PATH = "/Users/vbaudisch/Library/CloudStorage/GoogleDrive-vincent.baudisch@gmail.com/Meine Ablage/SEW/5BHIT/Worttrainer/src/main/java/Control/Worttrainer.txt";
+    public WortTrainer wortTrainer;
+    public Panel panel;
+    public static final String FILE_PATH = "/Users/vbaudisch/Library/CloudStorage/GoogleDrive-vincent.baudisch@gmail.com/Meine Ablage/SEW/5BHIT/Worttrainer/src/main/java/Control/Worttrainer.txt";
 
     /**
      * Konstruktor für die Klasse Control.
@@ -85,7 +85,7 @@ public class Control implements ActionListener {
      * Verarbeitet den Rateversuch des Benutzers.
      * Prüft, ob das eingegebene Wort korrekt ist, und aktualisiert das Panel.
      */
-    private void handleGuess() {
+    public void handleGuess() {
         String eingabe = panel.getText();
         if (wortTrainer.checkIgnoreCase(eingabe)) {
             JOptionPane.showMessageDialog(null, "Richtig!");
@@ -102,7 +102,7 @@ public class Control implements ActionListener {
     /**
      * Setzt die Statistiken (richtige und Gesamtversuche) des WortTrainers zurück.
      */
-    private void handleReset() {
+    public void handleReset() {
         wortTrainer.setRichtigeVersuche(0);
         wortTrainer.setGesamtVersuche(0);
         panel.updateRichtigeWoerter(wortTrainer.getRichtigeVersuche(), wortTrainer.getGesamtVersuche());
@@ -111,7 +111,7 @@ public class Control implements ActionListener {
     /**
      * Fügt ein neues Wort mit zugehöriger Bild-URL zur WortListe des WortTrainers hinzu.
      */
-    private void handleAddWord() {
+    public void handleAddWord() {
         String wort = JOptionPane.showInputDialog("Geben Sie das Wort ein:");
         String url = JOptionPane.showInputDialog("Geben Sie die Bild-URL ein:");
         try {

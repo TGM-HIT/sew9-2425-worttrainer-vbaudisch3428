@@ -1,0 +1,2 @@
+RichtigeVersuche:0
+GesamtVersuche:0

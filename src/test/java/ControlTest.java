@@ -1,96 +1,97 @@
 import Control.Control;
-import Model.WortListe;
 import Model.WortTrainer;
 import Persistence.WortTrainerPersistence;
-import View.Panel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.awt.event.ActionEvent;
 import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ControlTest {
-
+/**
+ * Die Klasse ControlTest enthält Tests für die Klasse Control.
+ * Sie überprüft die Funktionalität des WortTrainers, einschließlich
+ * das Laden von Wörtern, das Hinzufügen neuer Wörter, das
+ * Verarbeiten von Rateversuchen und das Zurücksetzen von Statistiken.
+ *
+ * @see Control
+ * @see Model.WortTrainer
+ * @see Persistence.WortTrainerPersistence
+ */
+class ControlTest {
     private Control control;
-    private WortTrainer wortTrainer;
-    private Panel panel;
 
+    /**
+     * Initialisiert eine Control-Instanz vor jedem Test.
+     */
     @BeforeEach
-    public void setUp() throws IOException {
-        // Set up initial conditions before each test
-        WortListe wortListe = new WortListe();
-        wortTrainer = new WortTrainer(wortListe);
-        WortTrainerPersistence.speichern(wortTrainer, "testFile.txt"); // Save an empty trainer for testing
+    void setUp() {
         control = new Control();
     }
 
+    /**
+     * Testet das Laden des WortTrainers aus einer Datei.
+     * Stellt sicher, dass der geladene Trainer nicht null ist
+     * und dass die Wortliste nicht leer ist.
+     */
     @Test
-    public void testHandleGuessCorrect() {
-        // Arrange: Add a word to test guessing
-        wortTrainer.getWortListe().addWort("Apfel", "https://example.com/apfel.jpg");
-        wortTrainer.checkIgnoreCase("Apfel"); // Update trainer
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Enter"));
-
-        // Act: Simulate entering the correct word
-        panel.setText("Apfel");
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Enter"));
-
-        // Assert: Ensure the correct guess was processed
-        assertEquals(1, wortTrainer.getRichtigeVersuche());
-        assertEquals(1, wortTrainer.getGesamtVersuche());
+    void testLoadWortTrainer() {
+        try {
+            WortTrainer loadedTrainer = WortTrainerPersistence.laden(Control.FILE_PATH);
+            assertNotNull(loadedTrainer);
+            assertNotNull(loadedTrainer.getWortListe());
+            assertFalse(loadedTrainer.getWortListe().getWortEinträge().isEmpty());
+        } catch (IOException e) {
+            fail("IOException occurred during loading: " + e.getMessage());
+        }
     }
 
+    /**
+     * Testet die Verarbeitung eines korrekten Rateversuchs.
+     * Überprüft, ob die Statistiken korrekt aktualisiert werden.
+     */
     @Test
-    public void testHandleGuessIncorrect() {
-        // Arrange: Add a word to test guessing
-        wortTrainer.getWortListe().addWort("Banane", "https://example.com/banane.jpg");
-        wortTrainer.checkIgnoreCase("Apfel"); // Update trainer
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Enter"));
+    void testHandleGuessCorrect() {
+        control.wortTrainer.getWortListe().addWort("Löwe", "https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg");
+        control.wortTrainer.getZufälligenEintrag();
 
-        // Act: Simulate entering the wrong word
-        panel.setText("Apfel");
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Enter"));
+        String guess = control.wortTrainer.getAktuellenEintrag().getWort();
 
-        // Assert: Ensure the incorrect guess was processed
-        assertEquals(0, wortTrainer.getRichtigeVersuche());
-        assertEquals(1, wortTrainer.getGesamtVersuche());
+        control.panel.setText(guess);
+        control.handleGuess();
+
+        assertEquals(1, control.wortTrainer.getRichtigeVersuche());
+        assertEquals(1, control.wortTrainer.getGesamtVersuche());
     }
 
+    /**
+     * Testet die Verarbeitung eines falschen Rateversuchs.
+     * Überprüft, ob die Statistiken korrekt aktualisiert werden.
+     */
     @Test
-    public void testHandleReset() {
-        // Arrange: Simulate a few guesses to modify statistics
-        wortTrainer.setRichtigeVersuche(5);
-        wortTrainer.setGesamtVersuche(10);
+    void testHandleGuessIncorrect() {
+        control.wortTrainer.getWortListe().addWort("Löwe", "https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg");
+        control.wortTrainer.getZufälligenEintrag();
 
-        // Act: Reset statistics
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Zurücksetzen!"));
+        String incorrectGuess = "Tiger";
 
-        // Assert: Check if statistics were reset correctly
-        assertEquals(0, wortTrainer.getRichtigeVersuche());
-        assertEquals(0, wortTrainer.getGesamtVersuche());
+        control.panel.setText(incorrectGuess);
+        control.handleGuess();
+
+        assertEquals(0, control.wortTrainer.getRichtigeVersuche());
+        assertEquals(1, control.wortTrainer.getGesamtVersuche());
     }
 
+    /**
+     * Testet das Zurücksetzen der Statistiken des WortTrainers.
+     * Überprüft, ob die Statistiken auf null zurückgesetzt werden.
+     */
     @Test
-    public void testHandleLoad() throws IOException {
-        // Arrange: Save a known state to load
-        WortTrainerPersistence.speichern(wortTrainer, "testFile.txt");
+    void testResetStatistics() {
+        control.wortTrainer.setRichtigeVersuche(5);
+        control.wortTrainer.setGesamtVersuche(10);
 
-        // Act: Load the state
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Laden"));
+        control.handleReset();
 
-        // Assert: Check if the state was loaded correctly
-        assertNotNull(wortTrainer);
-    }
-
-    @Test
-    public void testHandleSave() throws IOException {
-        // Act: Save the current state
-        control.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Speichern"));
-
-        // Assert: Check if the file was saved successfully
-        WortTrainer loadedTrainer = WortTrainerPersistence.laden("testFile.txt");
-        assertNotNull(loadedTrainer);
+        assertEquals(0, control.wortTrainer.getRichtigeVersuche());
+        assertEquals(0, control.wortTrainer.getGesamtVersuche());
     }
 }
