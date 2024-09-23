@@ -6,36 +6,18 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Die Klasse ControlTest enthält Tests für die Klasse Control.
- * Sie überprüft die Funktionalität des WortTrainers, einschließlich
- * das Laden von Wörtern, das Hinzufügen neuer Wörter, das
- * Verarbeiten von Rateversuchen und das Zurücksetzen von Statistiken.
- *
- * @see Control
- * @see Model.WortTrainer
- * @see Persistence.WortTrainerPersistence
- */
 class ControlTest {
     private Control control;
 
-    /**
-     * Initialisiert eine Control-Instanz vor jedem Test.
-     */
     @BeforeEach
     void setUp() {
         control = new Control();
     }
 
-    /**
-     * Testet das Laden des WortTrainers aus einer Datei.
-     * Stellt sicher, dass der geladene Trainer nicht null ist
-     * und dass die Wortliste nicht leer ist.
-     */
     @Test
     void testLoadWortTrainer() {
         try {
-            WortTrainer loadedTrainer = WortTrainerPersistence.laden(Control.FILE_PATH);
+            WortTrainer loadedTrainer = WortTrainerPersistence.laden(Control.getFilePath());
             assertNotNull(loadedTrainer);
             assertNotNull(loadedTrainer.getWortListe());
             assertFalse(loadedTrainer.getWortListe().getWortEinträge().isEmpty());
@@ -44,54 +26,42 @@ class ControlTest {
         }
     }
 
-    /**
-     * Testet die Verarbeitung eines korrekten Rateversuchs.
-     * Überprüft, ob die Statistiken korrekt aktualisiert werden.
-     */
     @Test
     void testHandleGuessCorrect() {
-        control.wortTrainer.getWortListe().addWort("Löwe", "https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg");
-        control.wortTrainer.getZufälligenEintrag();
+        control.getWortTrainer().getWortListe().addWort("Löwe", "https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg");
+        control.getWortTrainer().getZufälligenEintrag();
 
-        String guess = control.wortTrainer.getAktuellenEintrag().getWort();
+        String guess = control.getWortTrainer().getAktuellenEintrag().getWort();
 
-        control.panel.setText(guess);
+        control.getPanel().setText(guess);
         control.handleGuess();
 
-        assertEquals(1, control.wortTrainer.getRichtigeVersuche());
-        assertEquals(1, control.wortTrainer.getGesamtVersuche());
+        assertEquals(1, control.getWortTrainer().getRichtigeVersuche());
+        assertEquals(1, control.getWortTrainer().getGesamtVersuche());
     }
 
-    /**
-     * Testet die Verarbeitung eines falschen Rateversuchs.
-     * Überprüft, ob die Statistiken korrekt aktualisiert werden.
-     */
     @Test
     void testHandleGuessIncorrect() {
-        control.wortTrainer.getWortListe().addWort("Löwe", "https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg");
-        control.wortTrainer.getZufälligenEintrag();
+        control.getWortTrainer().getWortListe().addWort("Löwe", "https://www.ast-reisen.de/wp-content/uploads/2018/07/KEN_2018_1TKI_06C5A8313-1.jpg");
+        control.getWortTrainer().getZufälligenEintrag();
 
         String incorrectGuess = "Tiger";
 
-        control.panel.setText(incorrectGuess);
+        control.getPanel().setText(incorrectGuess);
         control.handleGuess();
 
-        assertEquals(0, control.wortTrainer.getRichtigeVersuche());
-        assertEquals(1, control.wortTrainer.getGesamtVersuche());
+        assertEquals(0, control.getWortTrainer().getRichtigeVersuche());
+        assertEquals(1, control.getWortTrainer().getGesamtVersuche());
     }
 
-    /**
-     * Testet das Zurücksetzen der Statistiken des WortTrainers.
-     * Überprüft, ob die Statistiken auf null zurückgesetzt werden.
-     */
     @Test
     void testResetStatistics() {
-        control.wortTrainer.setRichtigeVersuche(5);
-        control.wortTrainer.setGesamtVersuche(10);
+        control.getWortTrainer().setRichtigeVersuche(5);
+        control.getWortTrainer().setGesamtVersuche(10);
 
         control.handleReset();
 
-        assertEquals(0, control.wortTrainer.getRichtigeVersuche());
-        assertEquals(0, control.wortTrainer.getGesamtVersuche());
+        assertEquals(0, control.getWortTrainer().getRichtigeVersuche());
+        assertEquals(0, control.getWortTrainer().getGesamtVersuche());
     }
 }

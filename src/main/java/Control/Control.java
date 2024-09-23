@@ -24,24 +24,20 @@ import java.net.MalformedURLException;
  * @see Persistence.WortTrainerPersistence
  */
 
-
 public class Control implements ActionListener {
-    public WortTrainer wortTrainer;
-    public Panel panel;
-    public static final String FILE_PATH = "/Users/vbaudisch/Library/CloudStorage/GoogleDrive-vincent.baudisch@gmail.com/Meine Ablage/SEW/5BHIT/Worttrainer/src/main/java/Control/Worttrainer.txt";
+    private WortTrainer wortTrainer;  // privat
+    private Panel panel;              // privat
+    private static final String FILE_PATH = "/Users/vbaudisch/Library/CloudStorage/GoogleDrive-vincent.baudisch@gmail.com/Meine Ablage/SEW/5BHIT/Worttrainer/src/main/java/Control/Worttrainer.txt";
 
-    /**
-     * Konstruktor für die Klasse Control.
-     * Initialisiert den WortTrainer und das Panel und zeigt das Fenster an.
-     */
+    public static String getFilePath() {
+        return FILE_PATH;
+    }
+
     public Control() {
         try {
             WortListe wortListe = new WortListe();
-            // Initialisiere WortListe mit Daten aus der Datei
             wortTrainer = new WortTrainer(wortListe);
-            // Lade initialen WortTrainer aus einer Datei
             wortTrainer = WortTrainerPersistence.laden(FILE_PATH);
-            // Erzeuge das Panel und zeige es an
             panel = new Panel(wortTrainer.getZufälligenEintrag().getUrl(), this, wortTrainer.getRichtigeVersuche(), wortTrainer.getGesamtVersuche());
             JFrame frame = new JFrame("Wort Trainer");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,6 +50,15 @@ public class Control implements ActionListener {
             JOptionPane.showMessageDialog(null, "Fehler beim Laden des WortTrainers: " + e.getMessage());
         }
     }
+
+    public WortTrainer getWortTrainer() {
+        return wortTrainer;
+    }
+
+    public Panel getPanel() {
+        return panel;
+    }
+
 
     /**
      * Verarbeitet die Aktionen der Benutzeroberfläche.
